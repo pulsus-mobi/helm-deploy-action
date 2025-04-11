@@ -1,0 +1,16 @@
+name: "K8s Helm Deploy"
+description: "Gera manifestos dinâmicos e aplica com Helm ou kubectl"
+inputs:
+  app_name:
+    description: "Nome da aplicação"
+    required: true
+  image_repo:
+    description: "Repositório da imagem Docker"
+    required: true
+  image_tag:
+    description: "Tag da imagem Docker"
+    required: true
+runs:
+  using: "node16"
+  main: "dist/index.js"
+
