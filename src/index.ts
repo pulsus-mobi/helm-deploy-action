@@ -33,7 +33,7 @@ spec:
     fs.writeFileSync('application.yaml', yaml);
     core.info('Manifesto gerado com sucesso: application.yaml');
 
-    await exec.exec('kubectl apply -f application.yaml');
+    await exec.exec(`helm upgrade --install ${appName} ${core.getInput('chart')} --set image.repository=${imageRepo} --set image.tag=${imageTag}`);
   } catch (error: any) {
     core.setFailed(error.message);
   }
