@@ -1,43 +1,25 @@
 import * as core from '@actions/core';
 import * as exec from '@actions/exec';
-import * as fs from 'fs';
 
 async function run() {
   try {
     const appName = core.getInput('app_name');
     const imageRepo = core.getInput('image_repo');
     const imageTag = core.getInput('image_tag');
+    const chart = core.getInput('chart'); // Recebe o caminho do chart
 
-    const yaml = `
-apiVersion: apps/v1
-kind: Deployment
-metadata:
-  name: ${appName}
-spec:
-  replicas: 1
-  selector:
-    matchLabels:
-      app: ${appName}
-  template:
-    metadata:
-      labels:
-        app: ${appName}
-    spec:
-      containers:
-      - name: ${appName}
-        image: ${imageRepo}:${imageTag}
-        ports:
-        - containerPort: 80
-`;
+    core.info(`Deploying ${appName} using Helm`);
 
-    fs.writeFileSync('application.yaml', yaml);
-    core.info('Manifesto gerado com sucesso: application.yaml');
+    // Comando para instalar ou atualizar o release usando Helm
+    const helmCommand = `helm upgrade --install ${appName} ${chart} --set image.repository=${imageRepo} --set image.tag=${imageTag}`;
 
-    await exec.exec(`helm upgrade --install ${appName} ${core.getInput('chart')} --set image.repository=${imageRepo} --set image.tag=${imageTag}`);
+    // Executa o comando Helm
+    await exec.exec(helmCommand);
+    
+    core.info('Deploy concluído com sucesso!');
   } catch (error: any) {
     core.setFailed(error.message);
   }
 }
 
 run();
-
