@@ -1,13 +1,18 @@
+name: "Helm Deploy Action"
+description: "A GitHub Action for deploying with Helm"
 inputs:
   app_name:
-    description: Nome da aplicação
+    description: "Nome da aplicação"
     required: true
   image_repo:
-    description: Repositório da imagem Docker
+    description: "Repositório da imagem Docker"
     required: true
   image_tag:
-    description: Tag da imagem Docker
+    description: "Tag da imagem Docker"
     required: true
   chart:
-    description: Caminho do chart Helm
+    description: "Caminho para o Helm Chart"
     required: true
+runs:
+  using: "node12"          # Usando a versão do Node.js, pode ser "node16" dependendo da sua configuração
+  main: "dist/index.js"     # Aponta para o arquivo compilado, geralmente "dist/index.js" após compilar o TypeScript
